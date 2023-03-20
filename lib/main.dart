@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark(),
       initialBinding: InitBinding(),
-      home: App(),
+      home: const App(),
     );
   }
 }

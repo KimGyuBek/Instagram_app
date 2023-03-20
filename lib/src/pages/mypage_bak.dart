@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_instagram/src/components/avatar_widget.dart';
 import 'package:flutter_instagram/src/components/image_data.dart';
 import 'package:flutter_instagram/src/components/user_card.dart';
-import 'package:flutter_instagram/src/data/repository/member_repository.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -13,38 +12,6 @@ class MyPage extends StatefulWidget {
 
 class _MyPageState extends State<MyPage> with TickerProviderStateMixin {
   late TabController tabController;
-
-  final MemberRepository memberRepository = MemberRepository();
-
-  // late Map<String, dynamic> userInfo;
-  late Map<String, dynamic> userInfo;
-
-  // Future<Map<String, dynamic>> _callAPI() async {
-  //   var url = Uri.parse(
-  //     'http://localhost:8084/memberInfo/User1',
-  //   );
-  //
-  //   var future = http.get(url);
-  //
-  //   var response = await future;
-  //   // var responseDecode = jsonDecode(utf8.decode(response.bodyBytes));
-  //
-  //   print('Response status: ${response.statusCode}');
-  //   print('Response body: ${utf8.decode(response.bodyBytes)}');
-  //
-  //   print("userInfo ${jsonDecode(response.body)['userId']}");
-  //
-  //   return jsonDecode(response.body);
-  //
-  //   // print(utf8.decode(response.bodyBytes))
-  //
-  //   // url = Uri.parse('https://reqbin.com/sample/post/json');
-  //   // responseDecode = await http.post(url, body: {
-  //   //   'key': 'value',
-  //   // });
-  //   // print('Response status: ${responseDecode.statusCode}');
-  //   // print('Response body: ${responseDecode.body}');
-  // }
 
   @override
   void initState() {
@@ -124,10 +91,10 @@ class _MyPageState extends State<MyPage> with TickerProviderStateMixin {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children: [
               Text(
                 '사람 찾아보기',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                   color: Colors.black,
@@ -135,7 +102,7 @@ class _MyPageState extends State<MyPage> with TickerProviderStateMixin {
               ),
               Text(
                 '모두 보기',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
                   color: Colors.blue,
@@ -162,7 +129,7 @@ class _MyPageState extends State<MyPage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _information(Map<String, dynamic> datas) {
+  Widget _information() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
@@ -181,9 +148,9 @@ class _MyPageState extends State<MyPage> with TickerProviderStateMixin {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Expanded(child: _statisticOne('게시물', 0)),
-                    Expanded(child: _statisticOne('팔로워', datas['follower'])),
-                    Expanded(child: _statisticOne('팔로잉', datas['following'])),
+                    Expanded(child: _statisticOne('게시물', 14)),
+                    Expanded(child: _statisticOne('팔로워', 187)),
+                    Expanded(child: _statisticOne('팔로잉', 190)),
                   ],
                 ),
               ),
@@ -238,43 +205,6 @@ class _MyPageState extends State<MyPage> with TickerProviderStateMixin {
         });
   }
 
-  Widget _bodyWidget() {
-    return FutureBuilder(
-        future: memberRepository.findByUserId('User1'),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return Center(
-              child: CircularProgressIndicator(
-                color: Colors.blue,
-              ),
-            );
-          }
-
-          if (snapshot.hasError) {
-            return Center(child: Text("Data Error"));
-          }
-
-          if (snapshot.hasData) {
-            return SingleChildScrollView(
-              child: Column(
-                children: [
-                  _information(snapshot.data),
-                  _menu(),
-                  _discoverPeople(),
-                  SizedBox(height: 20),
-                  _tabMenu(),
-                  _tabView(),
-                ],
-              ),
-            );
-          }
-
-          return Center(
-            child: Text("오류!"),
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -312,7 +242,18 @@ class _MyPageState extends State<MyPage> with TickerProviderStateMixin {
           ),
         ],
       ),
-      body: _bodyWidget(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _information(),
+            _menu(),
+            _discoverPeople(),
+            SizedBox(height: 20),
+            _tabMenu(),
+            _tabView(),
+          ],
+        ),
+      ),
     );
   }
 }
